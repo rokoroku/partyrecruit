@@ -1,0 +1,41 @@
+//@import "bootstrap";
+
+body {
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  padding-top: 13px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+#logo:hover {
+  color: #aaa;
+  text-decoration: none;
+}
+
+/* miscellaneous */
+
+$grayMediumLight: #eaeaea;
+
+@mixin box_sizing {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.debug_dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  @include box_sizing;
+}

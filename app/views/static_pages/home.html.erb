@@ -1,0 +1,48 @@
+<% provide(:title, 'Home') %>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>Welcome to the Party Recruit!</h1>
+
+    <p>
+      파티모집 서비스에 오신 것을 환영합니다. <br>
+      손쉽게 원하는 파티를 모집하거나, 원하는 파티를 찾아 가입 해 보세요!
+    </p>
+
+    <%= link_to "Sign up now!", signup_path, class: "btn btn-primary btn-lg", role: "button" %>
+    </div>
+</div>
+
+<div class="container">
+  <!-- Example row of columns -->
+  <div class="row">
+    <div class="col-md-4">
+      <h2>About</h2>
+
+      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+        condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec
+        sed odio dui. </p>
+
+      <p><%= link_to "About", about_path, class:"btn btn-default", role:"button"%></p>
+    </div>
+    <div class="col-md-4">
+      <h2>Help</h2>
+
+      <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+        condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec
+        sed odio dui. </p>
+
+      <p><%= link_to "Help", help_path, class:"btn btn-default", role:"button"%></p>
+    </div>
+    <div class="col-md-4">
+      <h2>Contact</h2>
+
+      <p>
+        <%= link_to image_tag("rails.png", alt: "Rails"), 'http://rubyonrails.org/' %>
+      </p>
+
+      <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+    </div>
+  </div>
+</div>
