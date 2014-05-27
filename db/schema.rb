@@ -11,13 +11,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140515063951) do
+ActiveRecord::Schema.define(version: 20140527045052) do
+
+  create_table "has_tag", force: true do |t|
+    t.integer "party_id"
+    t.integer "tag_id"
+  end
+
+  add_index "has_tag", ["party_id", "tag_id"], name: "index_has_tag_on_party_id_and_tag_id", unique: true, using: :btree
+  add_index "has_tag", ["party_id"], name: "index_has_tag_on_party_id", using: :btree
+  add_index "has_tag", ["tag_id"], name: "index_has_tag_on_tag_id", using: :btree
 
   create_table "microposts", force: true do |t|
     t.string   "content"
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "party_id"
+  end
+
+  create_table "participate_in", force: true do |t|
+    t.integer "user_id"
+    t.integer "party_id"
+    t.boolean "leader"
+  end
+
+  add_index "participate_in", ["party_id"], name: "index_participate_in_on_party_id", using: :btree
+  add_index "participate_in", ["user_id", "party_id"], name: "index_participate_in_on_user_id_and_party_id", unique: true, using: :btree
+  add_index "participate_in", ["user_id"], name: "index_participate_in_on_user_id", using: :btree
+
+  create_table "parties", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.integer  "user_limit"
+    t.float    "location_longitude"
+    t.float    "location_latitude"
+    t.boolean  "recruiting"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tags", force: true do |t|
+    t.string "name"
   end
 
   create_table "users", force: true do |t|
@@ -25,6 +60,8 @@ ActiveRecord::Schema.define(version: 20140515063951) do
     t.string   "email"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "username"
+    t.date     "last_login"
     t.string   "password_digest"
   end
 
