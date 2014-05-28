@@ -1,0 +1,16 @@
+<div class="mybox">
+  <h3>
+    파티 목록
+  </h3>
+  <br>
+
+  <% if current_user.parties.length > 0 %>
+      <ul>
+        <% current_user.parties.each do |party| %>
+            <%= content_tag(:li, party.name) %>
+        <% end %>
+      </ul>
+  <% else %>
+      <p>참여중인 파티가 없습니다.</p>
+  <% end %>
+</div>

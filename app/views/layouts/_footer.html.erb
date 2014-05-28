@@ -1,0 +1,8 @@
+<div class="container">
+  <footer class="footer">
+    <p>&copy; 파티모집 2014</p>
+    <% params[:current_user] = current_user.attributes if signed_in? %>
+    <%= debug(params) if Rails.env.development? %>
+
+  </footer>
+</div>

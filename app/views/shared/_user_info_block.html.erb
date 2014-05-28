@@ -1,0 +1,13 @@
+<div class="thumbnail">
+  <h3>
+    <a href="<%= user_path(current_user) %>">
+      <%= gravatar_for current_user %>
+    </a>
+    <%= current_user.name %>
+  </h3>
+  <%= current_user.updated_at.strftime("Last login: %F ") %>
+  <!--<%= pluralize(current_user.microposts.count, "micropost") %>-->
+  <p>
+    <%= link_to "view my profile", current_user %>
+  </p>
+</div>

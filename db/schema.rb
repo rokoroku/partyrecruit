@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140527045052) do
+ActiveRecord::Schema.define(version: 20140527122052) do
 
   create_table "has_tag", force: true do |t|
     t.integer "party_id"
@@ -29,6 +29,9 @@ ActiveRecord::Schema.define(version: 20140527045052) do
     t.datetime "updated_at"
     t.integer  "party_id"
   end
+
+  add_index "microposts", ["party_id"], name: "idx_microposts_party_id", using: :btree
+  add_index "microposts", ["user_id"], name: "idx_microposts_user_id", using: :btree
 
   create_table "participate_in", force: true do |t|
     t.integer "user_id"
@@ -63,6 +66,7 @@ ActiveRecord::Schema.define(version: 20140527045052) do
     t.string   "username"
     t.date     "last_login"
     t.string   "password_digest"
+    t.string   "remember_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

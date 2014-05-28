@@ -1,6 +1,54 @@
-<h1>Editing user</h1>
+<% provide(:title, 'Edit ' + @user.name) %>
+<div class="container">
+  <h1>정보 수정</h1>
 
-<%= render 'form' %>
+  <%= form_for(@user) do |f| %>
+      <% if @user.errors.any? %>
+          <div id="error_explanation">
+            <h3><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h3>
 
-<%= link_to 'Show', @user %> |
-<%= link_to 'Back', users_path %>
+            <ul>
+              <% @user.errors.full_messages.each do |message| %>
+                  <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+      <% end %>
+
+      <div class="formarea">
+        <div class="span6 offset3">
+
+          <p>
+            <%= f.label :name %>
+            <%= f.text_field :name %>
+          </p>
+
+          <p>
+            <%= f.label :email %>
+            <%= f.text_field :email %>
+          </p>
+
+          <p>
+            <%= f.label :password %>
+            <%= f.password_field :password %>
+          </p>
+
+          <p>
+            <%= f.label :password_confirmation, "Confirmation" %>
+            <%= f.password_field :password_confirmation %>
+          </p>
+
+          <br>
+
+          <p>
+            <%= f.submit "Submit", class: "btn btn-large btn-primary", method: :update %>
+          </p>
+
+        </div>
+      </div>
+
+  <% end %>
+
+  <%= link_to 'Show', @user %> |
+  <%= link_to 'Back', users_path %>
+</div>

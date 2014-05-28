@@ -1,5 +1,15 @@
 Rails.application.routes.draw do
 
+  get 'party/new'
+
+  get 'party/create'
+
+  get 'party/show'
+
+  get 'party/edit'
+
+  get 'party/delete'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   # get "static_pages/home"
@@ -9,11 +19,17 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root 'static_pages#home'
+  match '/home',    to: 'static_pages#home',    via: 'get'
   match '/help',    to: 'static_pages#help',    via: 'get'
   match '/about',   to: 'static_pages#about',   via: 'get'
   match '/contact', to: 'static_pages#contact', via: 'get'
   match '/signup',  to: 'users#new',            via: 'get'
-  # 자동으로 about_path, about_url 등이 생성된다.
+
+  match '/signin',  to: 'sessions#new',         via: 'get'
+  match '/sessions',to: 'sessions#create',      via: 'post'
+  match '/signout', to: 'sessions#destroy',     via: 'delete'
+
+  # 자동으로 해당하는 (about의 경우 about_path, about_url) 변수 등이 생성된다.
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   resources :microposts

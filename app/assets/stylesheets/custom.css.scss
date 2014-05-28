@@ -12,7 +12,6 @@ body {
   color: #fff;
   text-transform: uppercase;
   letter-spacing: -1px;
-  padding-top: 13px;
   font-weight: bold;
   line-height: 1;
 }
@@ -32,6 +31,24 @@ $grayMediumLight: #eaeaea;
   box-sizing: border-box;
 }
 
+.formarea {
+  padding: 30px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  color: inherit;
+  background-color: $grayMediumLight
+}
+
+.formarea input, textarea, select, .uneditable-input {
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  width: 100%;
+  height: 40px !important;
+  padding: 5px;
+  @include box_sizing;
+}
+
+
 .debug_dump {
   clear: both;
   float: left;
@@ -40,16 +57,16 @@ $grayMediumLight: #eaeaea;
   @include box_sizing;
 }
 
-input, textarea, select, .uneditable-input {
-  border: 1px solid #bbb;
-  width: 100%;
-  margin-bottom: 15px;
-  @include box_sizing;
-}
-
-input {
-  height: auto !important;
-}
+.alert {
+   display: block;
+   padding: 9.5px;
+   margin: 10px 0 10px;
+   font-size: 13px;
+   line-height: 1.42857143;
+   word-break: break-all;
+   word-wrap: break-word;
+   border-radius: 4px;
+ }
 
 
 aside {
@@ -77,5 +94,20 @@ aside {
 
 .gravatar {
   float: left;
-  margin-right: 10px;
+  margin-left: 10px !important;
+  margin-right: 10px !important;
+}
+
+.mybox {
+  @include box_sizing;
+  display: block;
+  padding: 4px 20px 4px 20px;
+  margin-bottom: 20px;
+  line-height: 1.4285;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  -webkit-transition: all .2s ease-in-out;
+  transition: all .2s ease-in-out;
+  height: 100%;
 }
