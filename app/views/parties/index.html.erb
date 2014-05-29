@@ -1,0 +1,42 @@
+<% provide(:title, 'Listing parties') %>
+<div class="container">
+  <h1>Listing parties</h1>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>id</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>User limit</th>
+      <th>users</th>
+      <th colspan="3"></th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <% @parties.each do |party| %>
+        <tr>
+          <td><%= party.id %></td>
+          <td><%= party.name %></td>
+          <td><%= party.description %></td>
+          <td><%= party.user_limit %></td>
+          <td>
+            <% party.participate_ins.each do |participate| %>
+                <p><%= User.find_by(id: participate.user_id ).name %> <%= '👍' if participate.leader %></p>
+            <% end %>
+          </td>
+
+          <td><%= link_to 'Show', party %></td>
+          <td><%= link_to 'Join', join_party_path(party) %></td>
+          <td><%= link_to 'Edit', edit_party_path(party) %></td>
+          <td><%= link_to 'Destroy', party, method: :delete, data: {confirm: 'Are you sure?'} %></td>
+        </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <br>
+
+  <%= link_to 'New Party', new_party_path %>
+</div>

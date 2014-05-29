@@ -34,9 +34,12 @@
               <% end %>
           <% else %>
               <ul class="nav navbar-nav">
-                <li class="active"><a href="#">내 파티</a></li>
-                <li><a href="#">둘러보기</a></li>
-                <li><a href="#">모집하기</a></li>
+                <li id="menu1"><%= link_to "내 파티", root_path %></li>
+                <li id="menu2"><%= link_to "둘러보기", parties_path %></li>
+                <li id="menu3"><%= link_to "모집하기", new_party_path %></li>
+                <!--<#% if controller_name=='static_pages' %>-->
+                    <!--<%#= content_for :li, %>-->
+                <!--<#% end %>-->
               </ul>
 
               <ul class="nav navbar-nav navbar-right">
@@ -46,7 +49,7 @@
                     <li><%= link_to "내 정보", current_user %></li>
                     <li><%= link_to "로그아웃", signout_path, method: :delete %></li>
                     <li class="divider"></li>
-                    <li><a href="#">About</a></li>
+                    <li><%= link_to "About", about_path %></li>
                   </ul>
                 </li>
               </ul>

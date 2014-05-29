@@ -1,0 +1,38 @@
+<%= form_for(@party) do |f| %>
+    <% if @party.errors.any? %>
+        <div id="error_explanation">
+          <h3><%= pluralize(@party.errors.count, "error") %> prohibited this user from being saved:</h3>
+
+          <ul>
+            <% @party.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+    <% end %>
+
+    <div class="form-group">
+      <p>
+        <%= f.label :name %>
+        <%= f.text_field :name, placeholder: "파티명을 입력하세요.", class: "form-control" %>
+      </p>
+
+      <p>
+        <%= f.label :user_limit %>
+        <%= f.select :user_limit, [['2'], ['3'], ['4'], ['5']], class: "form-control" %>
+      </p>
+
+      <p>
+        <%= f.label :description %>
+        <%= f.text_area :description, placeholder: "파티에 대한 설명을 작성하세요.", row: '5', class: "form-control", style:"height:100px !important;"%>
+      </p>
+
+      <p class="help-block">테스트 양식임니당</p>
+
+      <p>
+        <%= f.submit "Submit", class: "btn btn-default" %>
+      </p>
+
+    </div>
+
+<% end %>
