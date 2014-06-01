@@ -22,6 +22,10 @@ class Party < ActiveRecord::Base
     end
   end
 
+  def leader()
+    users.find_by(id: participate_ins.find_by(leader: true).user_id)
+  end
+
   def participate!(user)
     if participate_ins.length < self.user_limit && !participate?(user)
         participate_ins.create!(user_id: user.id, leader:false)
@@ -36,6 +40,13 @@ class Party < ActiveRecord::Base
 
   def leave!(user)
     participate_ins.find_by(user_id: user.id).destroy
+  end
+
+  def as_json(options = { })
+    res = super(options)
+    res[:leader] = leader
+    res[:participants] = users
+    res  # return res
   end
 
 end

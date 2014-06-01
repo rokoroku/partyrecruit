@@ -1,46 +1,27 @@
 <script type="text/javascript">
     var map;
-    var dialog;
 
-    function initialize() {
-
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var mapCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-                drawMap(mapCenter);
-            }, function () {
-                handleNoGeolocation(true);
-            });
-        } else {
-            handleNoGeolocation(false);
-        }
-
-    }
-
-    //Edit form to be displayed with new marker
-    var EditForm = '<%= escape_javascript render 'dialogform' %>';
-
-    function drawMap(mapCenter) {
+    function drawMap(mapCenter, callback) {
 
         var mapOptions = {
             center: mapCenter, // map center
             zoom: 16, //zoom level, 0 = earth view to higher value
-            maxZoom: 17,
+            maxZoom: 19,
             minZoom: 15,
             scaleControl: true,
-//            zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
+            zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
             mapTypeId: google.maps.MapTypeId.ROADMAP // google map type
         };
 
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
-        //Drop a new Marker with our Edit Form
-        create_marker(mapCenter, 'New Party', EditForm, true, true, true, null);
+        if (!callback) {
+            callback = false;
+        }
+        if (callback) {
+            callback();
+        }
 
-        google.maps.event.addListener(map, 'rightclick', function (event) {
-            //Drop a new Marker with our Edit Form
-            remove_marker(dialog);
-        });
     }
 
     function loadScript() {
@@ -49,6 +30,7 @@
         script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&' + 'callback=initialize';
         document.body.appendChild(script);
     }
+    $(document).ready(loadScript);
 
     // handleNoGeolocation(errorFlag)
     // 브라우저에서 Geolocation을 지원하지 않을 때 오류 메세지 출력
@@ -58,33 +40,29 @@
         } else {
             window.alert('Error: Your browser doesn\'t support geolocation.');
         }
+//        map = new google.maps.Map(document.getElementById('map-canvas'));
     }
 
-
-    $(document).ready(loadScript);
-
-
-    function create_marker(mapPos, title, description, infoOpen, draggable, Removable, iconPath) {
+    function createMarker(position, title, description, infoOpen, draggable, removable, iconPath) {
 
         //new marker
         var marker = new google.maps.Marker({
-            position: mapPos,
+            position: position,
             map: map,
             draggable: draggable,
             animation: google.maps.Animation.DROP,
             title: title,
-            icon: iconPath
+            icon: iconPath,
+            infoWindow: null,
+            isInfoOpened: false
         });
 
-        dialog = marker;
-
         //Content structure of info Window for the Markers
-        var contentString = $('<div class="marker-info-win" style="width:480px">' +
-                '<h3 class="marker-heading" style="margin:0 0 14px;">' + title + '</h3>' +
+        var contentString = $('<div class="marker-info-win" style="width:auto; min-width: 320px">' +
+                '<h4 class="marker-heading" style="margin:0 0 14px;">' + title + '</h4>' +
                 '<div class="marker-inner-win"><span class="info-content">' +
                 description +
                 '</span></div></div>');
-
 
         //Create an infoWindow
         var infowindow = new google.maps.InfoWindow();
@@ -92,48 +70,62 @@
         //set the content of infoWindow
         infowindow.setContent(contentString[0]);
 
-        //Find remove button in infoWindow
-//        var removeBtn = contentString.find('button.remove-marker')[0];
-//        var saveBtn = contentString.find('button.save-marker')[0];
+        // find form content for marker
+        var formContent = contentString.find('input');
 
-        //add click listner to remove marker button
-//        google.maps.event.addDomListener(removeBtn, "click", function (event) {
-//            remove_marker(marker);
-//        });
-
-        if (typeof saveBtn !== 'undefined') //continue only when save button is present
-        {
-            //add click listner to save marker button
-            google.maps.event.addDomListener(saveBtn, "click", function (event) {
-                var mReplace = contentString.find('span.info-content'); //html to be replaced after success
-                var mName = contentString.find('input.save-name')[0].value; //name input field value
-                var mDesc = contentString.find('textarea.save-desc')[0].value; //description input field value
-                var mType = contentString.find('select.save-type')[0].value; //type of marker
-
-                if (mName == '' || mDesc == '') {
-                    alert("Please enter Name and Description!");
-                } else {
-                    save_marker(marker, mName, mDesc, mType, mReplace); //call save marker function
-                }
+        //set dom ready listener of infowindow
+        if(title === 'New Party') {
+            contentString[0].setAttribute("style", "width:auto; min-width: 320px; padding:10px 0 3px 10px");
+            google.maps.event.addListener(infowindow, 'domready', function () {
+                var commit_btn = formContent[formContent.length - 1];
+                commit_btn.onclick = function () {
+                    setLatLng(marker);
+                };
             });
         }
 
+        //set marker's infowindow as new infowindow
+        marker.infowindow = infowindow;
+
         //add click listner to save marker button
         google.maps.event.addListener(marker, 'click', function () {
-            infowindow.open(map, marker); // click on marker opens info window
+            if (!marker.isInfoOpened) {
+                marker.infowindow.open(map, marker); // click on marker opens info window
+                marker.isInfoOpened = true;
+            } else {
+                marker.infowindow.close();
+                marker.isInfoOpened = false;
+            }
         });
 
         if (infoOpen) //whether info window should be open by default
         {
-            infowindow.open(map, marker);
-            map.panBy(0,-200);
+            marker.infowindow.open(map, marker);
+            marker.isInfoOpened = true;
+            map.setCenter(marker.getPosition());
+            map.panBy(0, -150);
         }
 
+        google.maps.event.addListener(marker, 'dragend', function () {
+            map.setCenter(marker.getPosition());
+            map.panBy(0, -150);
+        });
+
+        return marker;
 
     }
 
+
+    function setLatLng(marker) {
+        var party_form = document.forms['new_party'];
+        if (party_form) {
+            party_form.elements['party_location_latitude'].value = marker.getPosition().lat();
+            party_form.elements['party_location_longitude'].value = marker.getPosition().lng();
+        }
+    }
+
     //############### Remove Marker Function ##############
-    function remove_marker(marker) {
+    function removeMarker(marker) {
 
         /* determine whether marker is draggable
          new markers are draggable and saved markers are fixed */

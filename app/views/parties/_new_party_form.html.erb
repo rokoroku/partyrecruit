@@ -11,7 +11,8 @@
         </div>
     <% end %>
 
-    <div class="form-group">
+    <div class="form-group" id="new_party_form">
+
       <p>
         <%= f.label :name %>
         <%= f.text_field :name, placeholder: "파티명을 입력하세요.", class: "form-control" %>
@@ -26,6 +27,9 @@
         <%= f.label :description %>
         <%= f.text_area :description, placeholder: "파티에 대한 설명을 작성하세요.", row: '5', class: "form-control", style:"height:100px !important;"%>
       </p>
+
+      <%= f.text_field :location_latitude, style:"display:none;"%>
+      <%= f.text_field :location_longitude, style:"display:none;"%>
 
       <p class="help-block">테스트 양식임니당</p>
 

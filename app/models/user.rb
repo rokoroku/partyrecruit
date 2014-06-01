@@ -48,6 +48,11 @@ class User < ActiveRecord::Base
     Digest::SHA1.hexdigest(token.to_s)
   end
 
+  # json 변환 함수 override
+  def as_json(options = { })
+    super({:only => [:id, :name]}.merge(options))
+  end
+
   private
   # Session 유지 token 생성 함수
   def create_remember_token

@@ -65,6 +65,6 @@ class PartiesController < ApplicationController
     end
 
     def party_params
-      params.require(:party).permit(:name, :user_limit, :description)
+      params.require(:party).permit(:name, :user_limit, :description, :location_longitude, :location_latitude)
     end
 end

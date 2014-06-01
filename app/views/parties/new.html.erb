@@ -1,4 +1,32 @@
+<script type="text/javascript">
+
+    var newPartyForm = '<%= escape_javascript render 'new_party_form' %>';
+
+    function initialize() {
+
+        var mapCenter = new google.maps.LatLng(parseFloat(37.28374147476122), parseFloat(127.04418));
+
+        drawMap(mapCenter, function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    mapCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    map.setCenter(mapCenter);
+                    createMarker(mapCenter, 'New Party', newPartyForm, true, true, true, null);
+                }, function () {
+                    handleNoGeolocation(true);
+                });
+            } else {
+                handleNoGeolocation(false);
+            }
+        });
+
+    }
+</script>
+
+<!--google map api-->
 <%= render 'mapjs' %>
 
+<!--google map canvas-->
 <div class="clearfix" id="map-canvas" style="height: 800px">
+
 </div>

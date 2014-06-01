@@ -1,3 +1,91 @@
+<script type="text/javascript">
+    var parties = <%= raw @parties.to_json %>;
+    var markers = new Object();
+
+    //        var parties = [
+    //            {"id": 16, "name": "a", "description": "dfads", "user_limit": 2, "location_longitude": null, "location_latitude": null, "recruiting": null, "created_at": "2014-05-29T10:17:12.000Z", "updated_at": "2014-05-29T10:17:12.000Z"},
+    //            {"id": 18, "name": "dgdasg", "description": "dgasgd", "user_limit": 2, "location_longitude": null, "location_latitude": null, "recruiting": null, "created_at": "2014-05-29T10:52:19.000Z", "updated_at": "2014-05-29T10:52:19.000Z"},
+    //            {"id": 19, "name": "이민준파티", "description": "fFSAD", "user_limit": 2, "location_longitude": null, "location_latitude": null, "recruiting": null, "created_at": "2014-05-29T10:52:55.000Z", "updated_at": "2014-05-29T10:52:55.000Z"},
+    //            {"id": 20, "name": "g", "description": "hhh", "user_limit": 2, "location_longitude": 127.043, "location_latitude": 37.2792, "recruiting": null, "created_at": "2014-05-30T02:26:11.000Z", "updated_at": "2014-05-30T02:26:11.000Z"},
+    //            {"id": 21, "name": "ggg", "description": "g", "user_limit": 2, "location_longitude": 127.035, "location_latitude": 37.2806, "recruiting": null, "created_at": "2014-05-30T02:28:06.000Z", "updated_at": "2014-05-30T02:28:06.000Z"},
+    //            {"id": 22, "name": "sdbadadsb", "description": "afsafsa", "user_limit": 2, "location_longitude": 127.048, "location_latitude": 37.2943, "recruiting": null, "created_at": "2014-05-31T00:33:39.000Z", "updated_at": "2014-05-31T00:33:39.000Z"}
+    //        ];
+
+    function bringWindowToTop(id) {
+        var marker = markers[id];
+        marker.infowindow.setZIndex(500);
+        var div = $("#party_" + id +"_content").trigger("create");
+//        marker.infowindow.open(map, marker);
+    }
+
+    function togglePartyDescription(id) {
+
+        var marker = markers[id];
+        var div = $("#party_" + id +"_content");
+
+        if( div.is(":visible") ) {
+            div.hide();
+            marker.zIndex--;
+            marker.infowindow.zIndex--;
+            marker.infowindow.open(map, marker);
+        } else {
+            div.show();
+            marker.setZIndex(500);
+            marker.infowindow.setZIndex(500);
+            marker.infowindow.open(map, marker);
+        }
+    }
+
+    function initialize() {
+
+        var mapCenter = new google.maps.LatLng(parseFloat(37.28374147476122), parseFloat(127.04418));
+
+        drawMap(mapCenter, function () {
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    mapCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    map.setCenter(mapCenter);
+                }, function () {
+                    handleNoGeolocation(true);
+                });
+            } else {
+                handleNoGeolocation(false);
+            }
+
+            for (var i in parties) {
+
+                var party = parties[i];
+                var position = new google.maps.LatLng(parseFloat(party.location_latitude), parseFloat(party.location_longitude));
+                var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + party.participants.length + '/' + party.user_limit + ')</small></span></div>';
+                var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id  + ')"><hr style="height:2px">'
+                        + '<p><strong>' + party.leader.name + '</strong><span class="pull-right">see more</span></p>'
+                        + '<p>' + party.description + '</p>'
+                        + '<p align=right>';
+                if(party.participants.length < party.user_limit) {
+                    content += '<a href="parties/' + party.id + '/join#" role="button" class="btn btn-success" style="margin-right:10px">가입</a>';
+                } else {
+                    content += '<button type="button" class="btn btn-success" disabled="disabled" style="margin-right:10px">허용인원이 가득찼습니다.</button>';
+                }
+                content += '<button type="button" class="btn btn-default" onclick="togglePartyDescription(' + party.id + ')">닫기</button>'
+                        + '</p>'
+                        + '</div>';
+
+                markers[party.id] = createMarker(position, title, content, true, false, true, 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + party.id + '|FF0000|000000');
+            }
+        });
+    }
+</script>
+
+<!--google map api-->
+<%= render 'mapjs' %>
+
+<!--google map canvas-->
+<div class="clearfix" id="map-canvas" style="height: 800px">
+
+</div>
+
+
 <% provide(:title, 'Listing parties') %>
 <div class="container">
   <h1>Listing parties</h1>
@@ -8,6 +96,7 @@
       <th>id</th>
       <th>Name</th>
       <th>Description</th>
+      <th>Location</th>
       <th>User limit</th>
       <th>users</th>
       <th colspan="3"></th>
@@ -20,10 +109,12 @@
           <td><%= party.id %></td>
           <td><%= party.name %></td>
           <td><%= party.description %></td>
+          <td><%= party.location_latitude %>
+            <br><%= party.location_longitude %></td>
           <td><%= party.user_limit %></td>
           <td>
             <% party.participate_ins.each do |participate| %>
-                <p><%= User.find_by(id: participate.user_id ).name %> <%= '👍' if participate.leader %></p>
+                <p><%= User.find_by(id: participate.user_id).name %> <%= '👍' if participate.leader %></p>
             <% end %>
           </td>
 
