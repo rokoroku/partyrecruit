@@ -1,19 +1,22 @@
 <div class="mybox">
   <h3>
-    파티원 명단
+    파티 구성원
   </h3>
   <br>
 
   <% if @party.users.length > 0 %>
       <% @party.users.each do |user| %>
-          <p>
-          <h4>
+          <div class="center-block" style="padding-bottom: 12px; display: block">
             <a href="<%= user_path(user) %>">
-              <%= gravatar_for user, size: 48 %>
-              <%= user.name %>
+              <%= gravatar_for user, {size: 48, style: "margin-right:8px;"} %>
             </a>
-          </h4>
-          </p>
+            <p style="margin-bottom: 8px">
+              <strong><%= user.name %></strong>
+            </p>
+            <p>
+            <span class="statusbox">안녕하세요? ㅎ</span>
+            </p>
+          </div>
       <% end %>
   <% else %>
       <p>참여중인 파티원이 없습니다.</p>

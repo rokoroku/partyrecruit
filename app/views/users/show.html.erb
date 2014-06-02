@@ -2,7 +2,7 @@
 <div class="container">
   <div class="row" style="margin-bottom: 20px">
     <h2>
-      <%= gravatar_for @user %>
+      <%= gravatar_for @user , style:"margin: 0 10px 10px 10px !important;" %>
       <%= @user.name %>
     </h2>
     <%= link_to 'Edit', edit_user_path(@user) %> | <%= link_to 'Back', users_path %>

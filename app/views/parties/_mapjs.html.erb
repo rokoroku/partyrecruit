@@ -7,7 +7,7 @@
             center: mapCenter, // map center
             zoom: 16, //zoom level, 0 = earth view to higher value
             maxZoom: 19,
-            minZoom: 15,
+            minZoom: 14,
             scaleControl: true,
             zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
             mapTypeId: google.maps.MapTypeId.ROADMAP // google map type
@@ -58,7 +58,7 @@
         });
 
         //Content structure of info Window for the Markers
-        var contentString = $('<div class="marker-info-win" style="width:auto; min-width: 320px">' +
+        var contentString = $('<div class="marker-info-win">' +
                 '<h4 class="marker-heading" style="margin:0 0 14px;">' + title + '</h4>' +
                 '<div class="marker-inner-win"><span class="info-content">' +
                 description +

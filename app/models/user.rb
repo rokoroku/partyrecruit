@@ -50,7 +50,9 @@ class User < ActiveRecord::Base
 
   # json 변환 함수 override
   def as_json(options = { })
-    super({:only => [:id, :name]}.merge(options))
+    json = super({:only => [:id, :name]}.merge(options))
+    json[:hash] = Digest::MD5::hexdigest(email.downcase)
+    json
   end
 
   private

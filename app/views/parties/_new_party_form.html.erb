@@ -11,7 +11,9 @@
         </div>
     <% end %>
 
-    <div class="form-group" id="new_party_form">
+    <div class="form-group" id="new_party_form" style="margin-bottom: 3px">
+
+      <p class="help-block">새로운 파티를 생성합니다.</p>
 
       <p>
         <%= f.label :name %>
@@ -25,16 +27,15 @@
 
       <p>
         <%= f.label :description %>
-        <%= f.text_area :description, placeholder: "파티에 대한 설명을 작성하세요.", row: '5', class: "form-control", style:"height:100px !important;"%>
+        <%= f.text_area :description, placeholder: "파티에 대한 설명을 작성하세요.", rows: '4', class: "form-control", style:"resize:none;"%>
       </p>
 
       <%= f.text_field :location_latitude, style:"display:none;"%>
       <%= f.text_field :location_longitude, style:"display:none;"%>
 
-      <p class="help-block">테스트 양식임니당</p>
 
-      <p>
-        <%= f.submit "Submit", class: "btn btn-default" %>
+      <p align="right" style="margin-bottom: 0;">
+        <%= f.submit "Submit", class: "btn btn-primary" %>
       </p>
 
     </div>

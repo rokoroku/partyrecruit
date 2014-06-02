@@ -58,8 +58,10 @@
                 var party = parties[i];
                 var position = new google.maps.LatLng(parseFloat(party.location_latitude), parseFloat(party.location_longitude));
                 var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + party.participants.length + '/' + party.user_limit + ')</small></span></div>';
-                var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id  + ')"><hr style="height:2px">'
-                        + '<p><strong>' + party.leader.name + '</strong><span class="pull-right">see more</span></p>'
+                var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id  + ')">'
+//                        + '<hr style="height:2px">'
+                        + '<p>' + '<img src="https://secure.gravatar.com/avatar/' + party.leader.hash + '?s=28&d=mm" style="margin-right:10px">'
+                        + '<strong>' + party.leader.name + '</strong><span class="pull-right">see more</span></p>'
                         + '<p>' + party.description + '</p>'
                         + '<p align=right>';
                 if(party.participants.length < party.user_limit) {
@@ -81,7 +83,7 @@
 <%= render 'mapjs' %>
 
 <!--google map canvas-->
-<div class="clearfix" id="map-canvas" style="height: 800px">
+<div class="container-fluid" id="map-canvas" style="height: 100vh">
 
 </div>
 
@@ -114,7 +116,7 @@
           <td><%= party.user_limit %></td>
           <td>
             <% party.participate_ins.each do |participate| %>
-                <p><%= User.find_by(id: participate.user_id).name %> <%= '👍' if participate.leader %></p>
+                <p><%= User.find_by(id: participate.user_id).name %> <%= '(방장)' if participate.leader %></p>
             <% end %>
           </td>
 

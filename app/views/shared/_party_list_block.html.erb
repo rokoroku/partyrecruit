@@ -1,13 +1,13 @@
 <div class="mybox">
   <h3>
-    파티 목록
+    내 파티
   </h3>
   <br>
 
   <% if current_user.parties.length > 0 %>
       <ul>
         <% current_user.parties.each do |party| %>
-            <%= content_tag(:li, party.name) %>
+            <li><%= link_to party.name, party %></li>
         <% end %>
       </ul>
   <% else %>

@@ -1,8 +1,14 @@
 //@import "bootstrap";
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url(asset_path('glyphicons-halflings-regular.eot'));
+  src: url(asset_path('glyphicons-halflings-regular.eot?#iefix')) format('embedded-opentype'), url(asset_path('glyphicons-halflings-regular.woff')) format('woff'), url(asset_path('glyphicons-halflings-regular.ttf')) format('truetype'), url(asset_path('glyphicons-halflings-regular.svg#glyphicons_halflingsregular')) format('svg');
+}
 
 body {
   padding-top: 50px;
   padding-bottom: 20px;
+  overflow:hidden;
 }
 
 #logo {
@@ -48,7 +54,6 @@ $grayMediumLight: #eaeaea;
   @include box_sizing;
 }
 
-
 .debug_dump {
   clear: both;
   float: left;
@@ -58,16 +63,15 @@ $grayMediumLight: #eaeaea;
 }
 
 .alert {
-   display: block;
-   padding: 9.5px;
-   margin: 10px 0 10px;
-   font-size: 13px;
-   line-height: 1.42857143;
-   word-break: break-all;
-   word-wrap: break-word;
-   border-radius: 4px;
- }
-
+  display: block;
+  padding: 9.5px;
+  margin: 10px 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  border-radius: 4px;
+}
 
 aside {
   section {
@@ -93,14 +97,13 @@ aside {
 }
 
 .gravatar {
+  display: block;
   float: left;
-  margin-left: 10px !important;
-  margin-right: 10px !important;
 }
 
 .mybox {
-  @include box_sizing;
-  display: block;
+//  @include box_sizing;
+//  display: block;
   padding: 4px 20px 4px 20px;
   margin-bottom: 20px;
   line-height: 1.4285;
@@ -113,6 +116,33 @@ aside {
 }
 
 .marker-info-win {
+  width:auto;
+  min-width: 280px;
   padding: 0;
-//  padding: 10px 0 3px 10px;
+  //  padding: 10px 0 3px 10px;
+}
+
+.statusbox {
+  padding: 2.5px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  word-break: break-all;
+  word-wrap: break-word;
+  color: #333;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.message_board a {
+  color: #000;
+  text-decoration: none;
+}
+.message_board a:hover{
+  color: #428bca;
+  font-weight: 500;
+}
+
+.message_board .media {
+  margin-bottom: 28px;
 }
