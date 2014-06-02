@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :users
   resources :parties
   get '/parties/:id/join', to: 'parties#join', as: 'join_party'
+  get '/parties/:id/leave', to: 'parties#leave', as: 'leave_party'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -43,9 +43,14 @@ class Party < ActiveRecord::Base
   end
 
   def as_json(options = { })
+    participants = {}
+    users.each do |user|
+      participants[user.id] = user
+    end
+
     res = super(options)
     res[:leader] = leader
-    res[:participants] = users
+    res[:participants] = participants
     res  # return res
   end
 

@@ -13,25 +13,25 @@
 
     function bringWindowToTop(id) {
         var marker = markers[id];
-        marker.infowindow.setZIndex(500);
-        var div = $("#party_" + id +"_content").trigger("create");
+        marker.infowindow.setZIndex(1000);
+        var div = $("#party_" + id + "_content").trigger("create");
 //        marker.infowindow.open(map, marker);
     }
 
     function togglePartyDescription(id) {
 
         var marker = markers[id];
-        var div = $("#party_" + id +"_content");
+        var div = $("#party_" + id + "_content");
 
-        if( div.is(":visible") ) {
+        if (div.is(":visible")) {
             div.hide();
             marker.zIndex--;
             marker.infowindow.zIndex--;
             marker.infowindow.open(map, marker);
         } else {
             div.show();
-            marker.setZIndex(500);
-            marker.infowindow.setZIndex(500);
+            marker.setZIndex(1000);
+            marker.infowindow.setZIndex(1000);
             marker.infowindow.open(map, marker);
         }
     }
@@ -57,20 +57,27 @@
 
                 var party = parties[i];
                 var position = new google.maps.LatLng(parseFloat(party.location_latitude), parseFloat(party.location_longitude));
-                var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + party.participants.length + '/' + party.user_limit + ')</small></span></div>';
-                var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id  + ')">'
+                var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + Object.keys(party.participants).length + '/' + party.user_limit + ')</small></span></div>';
+                var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id + ')">'
 //                        + '<hr style="height:2px">'
                         + '<p>' + '<img src="https://secure.gravatar.com/avatar/' + party.leader.hash + '?s=28&d=mm" style="margin-right:10px">'
                         + '<strong>' + party.leader.name + '</strong><span class="pull-right">see more</span></p>'
                         + '<p>' + party.description + '</p>'
-                        + '<p align=right>';
-                if(party.participants.length < party.user_limit) {
-                    content += '<a href="parties/' + party.id + '/join#" role="button" class="btn btn-success" style="margin-right:10px">가입</a>';
+                        + '<div style="display:block; height: 32px">';
+
+                if (party.participants[<%= current_user.id %>] != null ) {
+                    content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">이미 가입한 파티입니다.</span>';
                 } else {
-                    content += '<button type="button" class="btn btn-success" disabled="disabled" style="margin-right:10px">허용인원이 가득찼습니다.</button>';
+
+                    if ( Object.keys(party.participants).length < party.user_limit) {
+                        content += '<a href="parties/' + party.id + '/join#" role="button" class="btn btn-success" style="margin-right:10px">가입</a>';
+                    } else {
+                        content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">허용인원이 가득찼습니다.</span>';
+                    }
                 }
-                content += '<button type="button" class="btn btn-default" onclick="togglePartyDescription(' + party.id + ')">닫기</button>'
-                        + '</p>'
+
+                content += '<button type="button" class="btn btn-default pull-right" onclick="togglePartyDescription(' + party.id + ')">닫기</button>'
+                        + '</div>'
                         + '</div>';
 
                 markers[party.id] = createMarker(position, title, content, true, false, true, 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + party.id + '|FF0000|000000');
