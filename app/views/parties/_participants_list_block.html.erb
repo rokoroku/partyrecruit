@@ -6,19 +6,69 @@
 
   <% if @party.users.length > 0 %>
       <% @party.users.each do |user| %>
-          <div class="center-block" style="padding-bottom: 12px; display: block">
+          <div class="center-block message_board" style="min-height:60px; margin-bottom: 8px; display: block">
             <a href="<%= user_path(user) %>">
               <%= gravatar_for user, {size: 48, style: "margin-right:8px;"} %>
             </a>
-            <p style="margin-bottom: 8px">
-              <strong><%= user.name %></strong>
+
+            <!--유저 이름, 파티장일시 아이콘 출력-->
+            <p style="margin-bottom: 2px">
+              <strong><%= link_to user.name, user %></strong>
+              <% if @party.leader.id.equal?(user.id) %>
+                  <span class="glyphicon glyphicon-star" style="font-size: 13px; color:#f0ad4e"></span>
+              <% end %>
             </p>
-            <p>
-            <span class="statusbox">안녕하세요? ㅎ</span>
-            </p>
+
+            <!--유저일 시, 상태메세지 변경버튼 생성, -->
+            <% if user.id.equal?(current_user.id) %>
+                <a class="pull-right" href="#" data-toggle="modal" data-target="#bs-statusmsg-modal">
+                  <span class="glyphicon glyphicon-pencil" style="font-size:12px; vertical-align: middle; padding-top: 2px; padding-right: 4px"></span>
+                </a>
+            <% end %>
+
+            <!--상태메세지 보유 시 상태메세지 출력 -->
+            <% if !user.status_msg(@party).blank? %>
+                <p class="statusbox" style="margin-left: 54px">
+                  <span ><%= user.status_msg(@party) %></span>
+                </p>
+            <% else
+                 if user.id.equal? current_user.id %>
+                    <p style="line-height: 2em; font-size: 13px; color:gray">상태메세지가 없습니다.</p>
+                <% end end %>
           </div>
       <% end %>
   <% else %>
       <p>참여중인 파티원이 없습니다.</p>
   <% end %>
 </div>
+
+
+<!--modal (Bootstrap Dialog) -->
+<div class="modal fade " id="bs-statusmsg-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" style="margin-top: 30vh">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title">상태메세지 수정</h4>
+      </div>
+      <% #@participate_info = current_user.participate_info(@party)  %>
+      <% #form_for(@participate_info) do |f|  %>
+      <form action="<%= update_status_for_party_path %>" method="post">
+        <div style="display: none;">
+          <input name="utf8" type="hidden" value="✓">
+          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+        </div>
+        <div class="modal-body">
+          <label class="sr-only" for="inputStatusMessage">상태메세지를 입력하세요</label>
+          <input name="content" type="text" class="form-control" id="inputStatusMessage" placeholder="상태메세지를 입력하세요." value="<%= current_user.status_msg(@party) %>" style="display: flex">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+          <input type="submit" class="btn btn-primary" value="저장">
+        </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div><!-- /.modal -->

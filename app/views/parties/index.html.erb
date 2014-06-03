@@ -1,5 +1,9 @@
+<style type="text/css">
+    body {overflow:hidden;}
+</style>
+
 <script type="text/javascript">
-    var parties = <%= raw @parties.to_json %>;
+    var parties = <%= raw @active_parties.to_json %>;
     var markers = new Object();
 
     //        var parties = [
@@ -59,7 +63,6 @@
                 var position = new google.maps.LatLng(parseFloat(party.location_latitude), parseFloat(party.location_longitude));
                 var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + Object.keys(party.participants).length + '/' + party.user_limit + ')</small></span></div>';
                 var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id + ')">'
-//                        + '<hr style="height:2px">'
                         + '<p>' + '<img src="https://secure.gravatar.com/avatar/' + party.leader.hash + '?s=28&d=mm" style="margin-right:10px">'
                         + '<strong>' + party.leader.name + '</strong><span class="pull-right">see more</span></p>'
                         + '<p>' + party.description + '</p>'
@@ -72,7 +75,7 @@
                     if ( Object.keys(party.participants).length < party.user_limit) {
                         content += '<a href="parties/' + party.id + '/join#" role="button" class="btn btn-success" style="margin-right:10px">가입</a>';
                     } else {
-                        content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">허용인원이 가득찼습니다.</span>';
+                        content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">허용인원을 가득찼습니다.</span>';
                     }
                 }
 
@@ -80,7 +83,7 @@
                         + '</div>'
                         + '</div>';
 
-                markers[party.id] = createMarker(position, title, content, true, false, true, 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + party.id + '|FF0000|000000');
+                markers[party.id] = createMarker(position, title, content, true, false, true, 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + party.id + '|FF0000|000000', false);
             }
         });
     }
@@ -108,6 +111,7 @@
       <th>Location</th>
       <th>User limit</th>
       <th>users</th>
+      <th>recruiting?</th>
       <th colspan="3"></th>
     </tr>
     </thead>
@@ -126,6 +130,7 @@
                 <p><%= User.find_by(id: participate.user_id).name %> <%= '(방장)' if participate.leader %></p>
             <% end %>
           </td>
+          <td><%= party.recruiting %></td>
 
           <td><%= link_to 'Show', party %></td>
           <td><%= link_to 'Join', join_party_path(party) %></td>

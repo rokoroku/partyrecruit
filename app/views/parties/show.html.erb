@@ -1,108 +1,100 @@
 <% provide(:title, @party.name) %>
 <div class="container" style="margin-top:20px;">
   <div clas="row">
-    <div class="col-md-3">
-      <!--hidden-xs-->
-      <div class="hidden-sm hidden-xs">
-        <%= render 'shared/user_info_block' %>
-      </div>
 
+    <div class="col-lg-3 col-md-4 ">
+      <%= render 'party_info_block' %>
       <%= render 'participants_list_block' %>
-
       <%= link_to "파티 탈퇴", leave_party_url(@party.id), data: {confirm: '탈퇴하시겠습니까?'}, class: "btn btn-default", style: "width:100%; margin-bottom:24px" %>
     </div>
-  </div>
 
+    <div class="col-lg-9 col-md-8 col-xs-push-0">
+      <div class="mybox">
+        <h3>활동</h3>
+        <!--New Micropost Form-->
+        <% @micropost = Micropost.new %>
+        <%= form_for(@micropost) do |f| %>
+            <% if @micropost.errors.any? %>
+                <div id="error_explanation">
+                  <h3><%= pluralize(@micropost.errors.count, "error") %> prohibited this user from being saved:</h3>
 
-  <div class="col-md-9">
-    <div class="mybox">
-      <h3><%= @party.name %></h3>
+                  <ul>
+                    <% @micropost.errors.full_messages.each do |message| %>
+                        <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+            <% end %>
 
-      <!--New Micropost Form-->
-      <% @micropost = Micropost.new %>
-      <%= form_for(@micropost) do |f| %>
-          <% if @micropost.errors.any? %>
-              <div id="error_explanation">
-                <h3><%= pluralize(@micropost.errors.count, "error") %> prohibited this user from being saved:</h3>
+            <div class="form-group" id="new_micropost_form">
+              <%= f.text_field :party_id, value: @party.id, class: "hidden", style: "display: none;" %>
+              <%= f.text_area :content, placeholder: "What's going on?", rows: '4', class: "form-control", style: "resize: none; overflow:hidden;" %>
+              <%= f.submit "Submit", class: "btn btn-primary pull-right", style: "position:relative; top: -40px; right: 5px" %>
+            </div>
 
-                <ul>
-                  <% @micropost.errors.full_messages.each do |message| %>
-                      <li><%= message %></li>
+        <% end %>
+
+        <br>
+
+        <!--Message Board-->
+        <div class="message_board">
+          <% if @party.microposts.length > 0 %>
+              <% @party.microposts.each do |micropost| %>
+                  <% if !micropost.user_id.nil? %>
+                      <% user = User.find(micropost.user_id) %>
+                      <% if !user.nil? %>
+                          <div class="media">
+                            <a class="pull-left" href="#">
+                              <%= gravatar_for user, size: 48 %>
+                              <!--<img class="media-object" style="width: 64px; height: 64px;" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3QgZmlsbD0iI2VlZSIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiAvPjx0ZXh0IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGRvbWluYW50LWJhc2VsaW5lOiBjZW50cmFsOyBmaWxsOiAjYWFhOyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIj42NHg2NDwvdGV4dD48L3N2Zz4=" data-src="holder.js/64x64">-->
+                            </a>
+
+                            <div class="media-body">
+                              <div class="micropost_controlbox pull-right">
+                                <% if current_user.id.equal?(user.id) %>
+                                    <%= link_to micropost, method: :delete, data: {confirm: 'Are you sure?'} do %>
+                                        <span class="glyphicon glyphicon-trash" style="font-size: 12px"></span>
+                                    <% end %>
+                                <% end %>
+                              </div>
+
+                              <h4 class="media-heading"><%= link_to user.name, user %></h4>
+                              <%= micropost.content.gsub(/\n\r/, "<br />") %>
+
+                              <span class="pull-right" style="margin-top: 10px">
+                            <%= show_timestamp(micropost) %>
+                            </span>
+                            </div>
+                          </div>
+                      <% end %>
+                  <% else %>
+                      <% user = User.find_by_id(micropost.content.split[0]) %>
+                      <% if !user.nil? %>
+                          <div class="media-body info-message">
+                            <span class="glyphicon glyphicon-user" style="font-size: 12px; color:steelblue"></span>
+                            <%= link_to user.name, user %> 님이
+                            <%= "파티에 가입하였습니다." if micropost.content.split[1].eql?("joined") %>
+                            <%= "파티를 탈퇴하였습니다." if micropost.content.split[1].eql?("leaved") %>
+                            <span class="pull-right date"><%= show_timestamp(micropost) %></span>
+                          </div>
+                      <% end %>
                   <% end %>
-                </ul>
+              <% end %>
+          <% else %>
+              <div class="media-body info-message">
+                등록된 게시글이 없습니다.
               </div>
           <% end %>
 
-          <div class="form-group" id="new_micropost_form">
-            <%= f.text_field :party_id, value: @party.id, class: "hidden", style: "display: none;" %>
-            <%= f.text_area :content, placeholder: "What's going on?", rows: '3', class: "form-control", style: "resize: none;" %>
-            <%= f.submit "Submit", class: "btn btn-primary pull-right", style: "position:relative; top: -40px; right: 5px" %>
+          <div class="media-body info-message">
+            <span class="glyphicon glyphicon-ok" style="font-size: 12px; color:steelblue"></span>
+            파티가 생성되었습니다.
+            <span class="pull-right date"><%= show_timestamp(@party) %></span>
           </div>
 
-      <% end %>
-
-      <hr>
-
-      <!--Message Board-->
-      <div class="message_board">
-        <% if @party.microposts.length > 0 %>
-            <% @party.microposts.each do |micropost| %>
-                <% if !micropost.user_id.nil? %>
-                    <% user = User.find(micropost.user_id) %>
-                    <% if !user.nil? %>
-                        <div class="media">
-                          <a class="pull-left" href="#">
-                            <%= gravatar_for user, size: 48 %>
-                            <!--<img class="media-object" style="width: 64px; height: 64px;" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3QgZmlsbD0iI2VlZSIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiAvPjx0ZXh0IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7IGZvbnQtc2l6ZTogMTJweDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGRvbWluYW50LWJhc2VsaW5lOiBjZW50cmFsOyBmaWxsOiAjYWFhOyIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIj42NHg2NDwvdGV4dD48L3N2Zz4=" data-src="holder.js/64x64">-->
-                          </a>
-
-                          <div class="media-body">
-                            <div class="micropost_controlbox pull-right">
-                              <% if current_user.id.equal?(user.id) %>
-                                  <%= link_to micropost, method: :delete, data: {confirm: 'Are you sure?'} do %>
-                                      <span class="glyphicon glyphicon-trash" style="font-size: 12px"></span>
-                                  <% end %>
-                              <% end %>
-                            </div>
-
-                            <h4 class="media-heading"><%= link_to user.name, user %></h4>
-                            <%= micropost.content.gsub(/\n\r/, "<br />") %>
-
-                            <span class="pull-right" style="margin-top: 10px">
-                            <%= show_timestamp(micropost) %>
-                            </span>
-                          </div>
-                        </div>
-                    <% end %>
-                <% else %>
-                    <% user = User.find(micropost.content.split[0]) %>
-                    <% if !user.nil? %>
-                        <div class="media-body info-message">
-                          <span class="glyphicon glyphicon-user" style="font-size: 12px; color:steelblue"></span>
-                          <%= link_to user.name, user %> 님이
-                          <%= "파티에 가입하였습니다." if micropost.content.split[1].eql?("joined") %>
-                          <%= "파티를 탈퇴하였습니다." if micropost.content.split[1].eql?("leaved") %>
-                          <span class="pull-right date"><%= show_timestamp(micropost) %></span>
-                        </div>
-                    <% end %>
-                <% end %>
-            <% end %>
-        <% else %>
-            <div class="media-body info-message">
-              등록된 게시글이 없습니다.
-            </div>
-        <% end %>
-
-        <div class="media-body info-message">
-          <span class="glyphicon glyphicon-ok" style="font-size: 12px; color:steelblue"></span>
-          파티가 생성되었습니다.
-          <span class="pull-right date"><%= @party.created_at.strftime("%H:%M") %></span>
         </div>
-
       </div>
     </div>
+
   </div>
-
-
-</div>
 </div>

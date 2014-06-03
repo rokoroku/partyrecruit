@@ -48,6 +48,15 @@ class User < ActiveRecord::Base
     Digest::SHA1.hexdigest(token.to_s)
   end
 
+  def status_msg(party)
+    participate_info = participate_in.find_by(party_id: party.id)
+    participate_info.status_msg if !participate_info.nil?
+  end
+
+  def participate_info(party)
+    participate_in.find_by(party_id: party.id)
+  end
+
   # json 변환 함수 override
   def as_json(options = { })
     json = super({:only => [:id, :name]}.merge(options))

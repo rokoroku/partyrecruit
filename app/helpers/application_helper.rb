@@ -11,6 +11,18 @@ module ApplicationHelper
     end
   end
 
+  def show_timestamp(object)
+    if object.created_at.today?
+      object.created_at.strftime("%H:%M")
+    else
+      if object.created_at.year.equal? Date.today.year
+        object.created_at.strftime("%m월 %d일")
+      else
+        object.created_at.strftime("%yy년 %m월 %d일")
+      end
+    end
+  end
+
   def javascript(*files)
     content_for(:head) { javascript_include_tag(*files) }
   end

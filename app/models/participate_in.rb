@@ -4,4 +4,6 @@ class ParticipateIn < ActiveRecord::Base
   belongs_to :party
   validates :party_id, presence: true
   validates :user_id, presence: true
+  validates :status_msg,
+            length: {maximum: 50}
 end

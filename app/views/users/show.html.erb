@@ -1,24 +1,52 @@
 <% provide(:title, @user.name) %>
+<style type="text/css">
+    dt {
+        width: 100px !important;
+        float: left;
+    }
+    dd {
+        margin-left: 100px !important;
+        margin-bottom: 10px !important;
+        padding-top: 1px;
+    }
+</style>
+
 <div class="container">
-  <div class="row" style="margin-bottom: 20px">
-    <h2>
-      <%= gravatar_for @user , style:"margin: 0 10px 10px 10px !important;" %>
-      <%= @user.name %>
-    </h2>
-    <%= link_to 'Edit', edit_user_path(@user) %> | <%= link_to 'Back', users_path %>
-  </div>
-  <div>
+  <div class="mybox" style="margin-top: 20px">
+    <div style="height: 80px">
+      <h3>
+        <%= gravatar_for @user, style: "margin: 0 16px 10px 0 !important;" %>
+        <p><%= @user.name %></p>
+      </h3>
+      <p style="margin-top:18px">
+        <a href="http://gravatar.com/">Add Icon</a><br>
+        <%= link_to "Edit Information", edit_user_url if @user.id.equal? current_user.id %>
+
+        <%# style: "width:50%" class: "btn btn-default"%>
+      </p>
+    </div>
+    <br>
+
     <dl>
-      <dt>Email</dt>
+      <dt>이메일</dt>
       <dd><%= @user.email %></dd>
-      <dt>Joined Date</dt>
+
+      <dt>가입 파티 수</dt>
+      <dd><%= pluralize(@user.parties.count, "party") %></dd>
+
+      <dt>작성글 수</dt>
+      <dd><%= pluralize(@user.microposts.count, "post") %></dd>
+
+      <dt>가입일</dt>
       <dd><%= @user.created_at %></dd>
-      <dt>Parties</dt>
-      <dd><%= @user.parties.length %></dd>
-      <dt>Microposts</dt>
-      <dd><%= @user.microposts.length %></dd>
+
+      <dt>최종 접속일</dt>
+      <dd><%= @user.updated_at %></dd>
+
     </dl>
   </div>
-  <br>
+
+  <%= link_to '탈퇴하기', @user, method: :delete, data: {confirm: 'Are you sure?'}, class: "btn btn-default pull-right" if @user.id.equal? current_user.id %>
+  <%= link_to "돌아가기", :back, class: "btn btn-default" %>
 
 </div>

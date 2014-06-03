@@ -13,29 +13,36 @@
 
     <div class="form-group" id="new_party_form" style="margin-bottom: 3px">
 
-      <p class="help-block">새로운 파티를 생성합니다.</p>
+      <p class="help-block">
+        <%= "새로운 파티를 생성합니다." if @party.id.nil? %>
+        <%= "파티를 수정합니다." if @party.id %>
+      </p>
 
       <p>
         <%= f.label :name %>
-        <%= f.text_field :name, placeholder: "파티명을 입력하세요.", class: "form-control" %>
+        <%= f.text_field :name, placeholder: "파티명을 입력하세요.", value: @party.name, class: "form-control" %>
       </p>
 
       <p>
         <%= f.label :user_limit %>
-        <%= f.select :user_limit, [['2'], ['3'], ['4'], ['5']], class: "form-control" %>
+        <%= f.select :user_limit, [['2'], ['3'], ['4'], ['5'], ['6'], ['7'], ['8']], selected: 4, class: "form-control" if !@party.user_limit %>
+        <%= f.select :user_limit, [['2'], ['3'], ['4'], ['5'], ['6'], ['7'], ['8']], selected: @party.user_limit, class: "form-control" if @party.user_limit %>
       </p>
 
       <p>
         <%= f.label :description %>
-        <%= f.text_area :description, placeholder: "파티에 대한 설명을 작성하세요.", rows: '4', class: "form-control", style:"resize:none;"%>
+        <%= f.text_area :description, placeholder: "파티에 대한 설명을 작성하세요.", value: @party.description, rows: '4', class: "form-control", style: "resize:none;" %>
       </p>
 
-      <%= f.text_field :location_latitude, style:"display:none;"%>
-      <%= f.text_field :location_longitude, style:"display:none;"%>
-
+      <%= f.text_field :location_latitude, style: "display:none;" %>
+      <%= f.text_field :location_longitude, style: "display:none;" %>
 
       <p align="right" style="margin-bottom: 0;">
-        <%= f.submit "Submit", class: "btn btn-primary" %>
+        <% if @party.id.nil? %>
+            <%= f.submit "Submit", class: "btn btn-primary" %>
+        <% else %>
+            <%= f.submit "Update", class: "btn btn-primary", method: :update %>
+        <% end %>
       </p>
 
     </div>

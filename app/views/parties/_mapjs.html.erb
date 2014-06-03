@@ -43,19 +43,22 @@
 //        map = new google.maps.Map(document.getElementById('map-canvas'));
     }
 
-    function createMarker(position, title, description, infoOpen, draggable, removable, iconPath) {
+    function createMarker(position, title, description, infoOpen, draggable, removable, iconPath, animate) {
 
         //new marker
         var marker = new google.maps.Marker({
             position: position,
             map: map,
             draggable: draggable,
-            animation: google.maps.Animation.DROP,
             title: title,
             icon: iconPath,
             infoWindow: null,
             isInfoOpened: false
         });
+
+        if (animate) {
+            marker.animation = google.maps.Animation.DROP;
+        }
 
         //Content structure of info Window for the Markers
         var contentString = $('<div class="marker-info-win">' +

@@ -1,4 +1,6 @@
 //@import "bootstrap";
+//@import url(http://fonts.googleapis.com/earlyaccess/nanumgothic.css);
+
 @font-face {
   font-family: 'Glyphicons Halflings';
   src: url(asset_path('glyphicons-halflings-regular.eot'));
@@ -8,7 +10,8 @@
 body {
   padding-top: 50px;
   padding-bottom: 20px;
-  overflow:hidden;
+  //  overflow:hidden;
+
 }
 
 #logo {
@@ -62,17 +65,22 @@ $grayMediumLight: #eaeaea;
   @include box_sizing;
 }
 
+
 .alert {
   display: block;
   padding: 9.5px;
-  margin: 10px 0 10px;
+  margin: 10px 5px 0 5px;
   font-size: 13px;
   line-height: 1.42857143;
   word-break: break-all;
   word-wrap: break-word;
   border-radius: 4px;
+  opacity: 0.8;
 }
 
+.alert-notice {
+  background-color: #dff0d8;
+}
 aside {
   section {
     padding: 10px 0;
@@ -122,25 +130,13 @@ aside {
   //  padding: 10px 0 3px 10px;
 }
 
-.statusbox {
-  padding: 2.5px;
-  font-size: 13px;
-  line-height: 1.42857143;
-  word-break: break-all;
-  word-wrap: break-word;
-  color: #333;
-  background-color: #f5f5f5;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
 .message_board a {
   color: #000;
   text-decoration: none;
 }
 .message_board a:hover{
   color: #428bca;
-  font-weight: 500;
+//  font-weight: 500;
 }
 
 .message_board .media {
@@ -158,4 +154,27 @@ aside {
 
 .message_board .date{
   color: #000000;
+}
+
+.status-msg-form .form-control {
+  padding:1.5px;
+  margin-left: 52px;
+  height:28px;
+  width: auto;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  font-size: 13px;
+}
+
+.statusbox {
+  width: auto;
+  padding: 0 4px 0 4px;
+  font-size: 13px;
+  line-height: 2em;
+  word-break:   break-all;
+  word-wrap: normal;
+  color: #333;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }

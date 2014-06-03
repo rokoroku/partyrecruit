@@ -22,7 +22,7 @@ class Party < ActiveRecord::Base
     end
   end
 
-  def leader()
+  def leader
     users.find_by(id: participate_ins.find_by(leader: true).user_id)
   end
 
@@ -40,6 +40,10 @@ class Party < ActiveRecord::Base
 
   def leave!(user)
     participate_ins.find_by(user_id: user.id).destroy
+  end
+
+  def message_count
+    microposts.count(:user_id)
   end
 
   def as_json(options = { })

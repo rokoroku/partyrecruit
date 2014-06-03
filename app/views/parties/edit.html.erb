@@ -1,2 +1,27 @@
-<h1>Party#edit</h1>
-<p>Find me in app/views/party/edit.html.erb</p>
+<style type="text/css">
+    body {
+        overflow: hidden;
+    }
+</style>
+
+<script type="text/javascript">
+
+    var partyForm = '<%= escape_javascript render 'new_party_form' %>';
+
+    function initialize() {
+
+        var mapCenter = new google.maps.LatLng(parseFloat(<%=@party.location_latitude%>), parseFloat(<%=@party.location_longitude%>));
+        drawMap(mapCenter, function () {
+            createMarker(mapCenter, 'Edit Party', partyForm, true, true, true, null, true);
+        });
+
+    }
+</script>
+
+<!--google map api-->
+<%= render 'mapjs' %>
+
+<!--google map canvas-->
+<div class="container-fluid" id="map-canvas" style="height: 100vh">
+
+</div>

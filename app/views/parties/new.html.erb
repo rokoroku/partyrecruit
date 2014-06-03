@@ -1,3 +1,7 @@
+<style type="text/css">
+    body {overflow:hidden;}
+</style>
+
 <script type="text/javascript">
 
     var newPartyForm = '<%= escape_javascript render 'new_party_form' %>';
@@ -11,7 +15,7 @@
                 navigator.geolocation.getCurrentPosition(function (position) {
                     mapCenter = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                     map.setCenter(mapCenter);
-                    createMarker(mapCenter, 'New Party', newPartyForm, true, true, true, null);
+                    createMarker(mapCenter, 'New Party', newPartyForm, true, true, true, null, true);
                 }, function () {
                     handleNoGeolocation(true);
                 });

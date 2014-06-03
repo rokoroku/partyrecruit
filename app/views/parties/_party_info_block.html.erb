@@ -1,0 +1,51 @@
+<div class="mybox">
+  <h3>
+    <p><%= @party.name %></p>
+    <small><%= @party.description %></small>
+  </h3>
+  <br>
+  <style type="text/css">
+      dt {
+          width: 100px !important;
+          float: left;
+      }
+      dd {
+          margin-left: 100px !important;
+          padding-top: 1px;
+      }
+  </style>
+  <dl>
+    <dt>파티장</dt>
+    <dd><%= @party.leader.name %></dd>
+
+    <dt>개설일</dt>
+    <dd><%= @party.created_at.strftime("%F") %></dd>
+
+    <dt>파티원 수</dt>
+    <dd><%= pluralize(@party.users.count, "user") %></dd>
+
+    <dt>게시글 수</dt>
+    <dd><%= pluralize(@party.message_count, "post") %></dd>
+  </dl>
+
+  <p></p>
+
+  <% disable = "disabled" if !@party.leader.id.equal? current_user.id %>
+  <p align="center">
+    <%= form_for(@party) do |f| %>
+        <% if @party.recruiting? %>
+            <%= f.hidden_field :recruiting, value: false %>
+            <%= f.submit "모집 중", class: "btn btn-success", style: "width:100%", method: :update, disabled: disable %>
+        <% else %>
+            <%= f.hidden_field :recruiting, value: true %>
+            <%= f.submit "모집 시작", class: "btn btn-primary", style: "width:100%", method: :update, disabled: disable %>
+        <% end %>
+    <% end %>
+  </p>
+
+  <% if @party.leader.id.equal? current_user.id %>
+      <p align="center">
+        <%= link_to "정보 수정", edit_party_url(@party), class: "btn btn-default", style: "width:100%" %>
+      </p>
+  <% end %>
+</div>
