@@ -29,8 +29,11 @@
           <% flash.discard(key) %>
       <% end %>
       <script type="text/javascript">
-          window.setTimeout(function () { var flash = $(".alert");
-              flash.fadeOut(1000, function () { flash.remove();});
+          window.setTimeout(function () {
+              var flash = $(".alert");
+              flash.fadeOut(1000, function () {
+                  flash.remove();
+              });
           }, 3000);
       </script>
   <% end %>

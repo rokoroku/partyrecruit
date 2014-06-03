@@ -19,7 +19,8 @@
         <p><%= @user.name %></p>
       </h3>
       <p style="margin-top:18px">
-        <a href="http://gravatar.com/">Add Icon</a><br>
+        <%= link_to "Change Icon", "http://gravatar.com" if @user.id.equal? current_user.id %>
+        <br/>
         <%= link_to "Edit Information", edit_user_url if @user.id.equal? current_user.id %>
 
         <%# style: "width:50%" class: "btn btn-default"%>
