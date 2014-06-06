@@ -5,7 +5,7 @@
     <div class="col-lg-3 col-md-4 ">
       <%= render 'party_info_block' %>
       <%= render 'participants_list_block' %>
-      <%= link_to "파티 탈퇴", leave_party_url(@party.id), data: {confirm: '탈퇴하시겠습니까?'}, class: "btn btn-default", style: "width:100%; margin-bottom:24px" %>
+      <%= link_to "파티 탈퇴", leave_party_url(@party.id), data: {confirm: '탈퇴하시겠습니까?'}, class: "btn btn-default hidden-xs hidden-sm", style: "width:100%; margin-bottom:24px" %>
     </div>
 
     <div class="col-lg-9 col-md-8 col-xs-push-0">
@@ -94,7 +94,11 @@
 
         </div>
       </div>
+
+      <%= link_to "파티 탈퇴", leave_party_url(@party.id), data: {confirm: '탈퇴하시겠습니까?'}, class: "btn btn-default visible-xs visible-sm", style: "width:100%; margin-bottom:24px" %>
+
     </div>
+
 
   </div>
 </div>
