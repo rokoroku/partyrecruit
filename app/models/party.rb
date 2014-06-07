@@ -23,7 +23,8 @@ class Party < ActiveRecord::Base
   end
 
   def leader
-    users.find_by(id: participate_ins.find_by(leader: true).user_id)
+    leader_info = participate_ins.find_by(leader: true)
+    users.find_by(id: leader_info.user_id) if !leader_info.nil?
   end
 
   def participate!(user)

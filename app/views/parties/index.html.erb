@@ -127,7 +127,12 @@
           <td><%= party.user_limit %></td>
           <td>
             <% party.participate_ins.each do |participate| %>
-                <p><%= User.find_by(id: participate.user_id).name %> <%= '(방장)' if participate.leader %></p>
+                <% user = User.find_by(id: participate.user_id) %>
+                <p>
+                  <%= user.name if !user.nil? %>
+                  <%= '탈퇴한 회원' if user.nil? %>
+                  <%= '(방장)' if participate.leader %>
+                </p>
             <% end %>
           </td>
           <td><%= party.recruiting %></td>
