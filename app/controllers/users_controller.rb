@@ -29,7 +29,7 @@ class UsersController < ApplicationController
     if @user.save
       sign_in @user
       flash[:success] = "회원이 되신 것을 진심으로 환영합니다!!"
-      redirect_to @user
+      redirect_to root_path
     else
       flash[:danger] = "오류가 발생했습니다."
       render 'new'
