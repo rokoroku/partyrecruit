@@ -6,13 +6,13 @@ module PartiesHelper
   end
 
   def print_remaining_time(ended_at)
-    remaining = (ended_at - Time.now)/60 + 0.5
-    if remaining >= 60
-      (remaining/60).to_i.to_s << "시간 " << (remaining%60).to_i.to_s << "분"
-    else
-      remaining.to_i.to_s << "분"
+    unless ended_at.nil?
+      remaining = (ended_at - Time.now)/60 + 0.5
+      if remaining >= 60
+        (remaining/60).to_i.to_s << "시간 " << (remaining%60).to_i.to_s << "분"
+      else
+        remaining.to_i.to_s << "분"
+      end
     end
   end
-
-
 end
