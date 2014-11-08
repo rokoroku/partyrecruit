@@ -5,6 +5,7 @@ class Party < ActiveRecord::Base
 
   has_many :users, through: :participate_ins
   has_many :tags, through: :has_tags
+
   validates :name,
             presence: true,
             length: {maximum: 50}
@@ -15,6 +16,28 @@ class Party < ActiveRecord::Base
 
   validates :user_limit,
             presence: true
+
+  after_initialize :do_this_after_initialize
+
+  def do_this_after_initialize
+    unless ended_at.nil?
+      if ended_at < Time.now
+        update_attributes(recruiting: false)
+      end
+    end
+  end
+
+  def distance(longitude, latitude)
+    @_longitude = longitude if @_longitude.nil?
+    @_latitude = latitude if @_latitude.nil?
+
+    if @_longitude != longitude || @_latitude != latitude || @_distance.nil?
+      @_distance = ((location_longitude-longitude)**2 + (location_latitude - latitude)**2)**0.5
+    end
+    @_longitude = longitude
+    @_latitude = latitude
+    @_distance
+  end
 
   def leader!(user)
     if participate?(user)
@@ -29,7 +52,7 @@ class Party < ActiveRecord::Base
 
   def participate!(user)
     if participate_ins.length < self.user_limit && !participate?(user)
-        participate_ins.create!(user_id: user.id, leader:false)
+      participate_ins.create!(user_id: user.id, leader: false)
     else
       false
     end
@@ -47,7 +70,7 @@ class Party < ActiveRecord::Base
     microposts.count(:user_id)
   end
 
-  def as_json(options = { })
+  def as_json(options = {})
     participants = {}
     users.each do |user|
       participants[user.id] = user
@@ -56,7 +79,7 @@ class Party < ActiveRecord::Base
     res = super(options)
     res[:leader] = leader
     res[:participants] = participants
-    res  # return res
+    res # return res
   end
 
 end

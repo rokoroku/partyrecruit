@@ -1,0 +1,33 @@
+<div class="mybox">
+  <style type="text/css">
+      ul {
+          margin-top: 20px;
+          padding-left: 1em !important;
+      }
+  </style>
+  <h3>
+    <%= '파티 목록' if @keyword.nil? %>
+    <%= '검색 결과' unless @keyword.nil? %>
+  </h3>
+
+  <% if @active_parties.length > 0 %>
+      <% @active_parties.each do |party| %>
+          <!--<li><%= link_to party.name, party %></li>-->
+          <hr>
+          <p>
+            <a href="#" onclick="setCenter(<%=party.location_latitude%>, <%=party.location_longitude%>); return false;"><%= party.name %></a>
+            <span class="pull-right">(<%= party.users.count %>/<%= party.user_limit %>)</span>
+          </p>
+
+          <p>
+            <%= party.description %>
+            <span class="pull-right"><%= print_remaining_time(party.ended_at) %></span>
+          </p>
+      <% end %>
+  <% else %>
+      <p>
+        <%= '개설된 파티가 없습니다.' if @keyword.nil? %>
+        <%= @keyword + ' 키워드로 검색된 파티가 없습니다.' unless @keyword.nil? %>
+      </p>
+  <% end %>
+</div>

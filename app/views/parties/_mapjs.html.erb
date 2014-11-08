@@ -7,7 +7,7 @@
             center: mapCenter, // map center
             zoom: 16, //zoom level, 0 = earth view to higher value
             maxZoom: 19,
-            minZoom: 14,
+            minZoom: 11,
             scaleControl: true,
             zoomControlOptions: { style: google.maps.ZoomControlStyle.SMALL },
             mapTypeId: google.maps.MapTypeId.ROADMAP // google map type
@@ -22,6 +22,12 @@
             callback();
         }
 
+    }
+
+    function setCenter(latitude, longitude) {
+        var newCenter = new google.maps.LatLng(latitude, longitude);
+        if(map.getZoom() <= 14) map.setZoom(15);
+        map.panTo(newCenter);
     }
 
     function loadScript() {

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140602093953) do
+ActiveRecord::Schema.define(version: 20141108065935) do
 
   create_table "has_tag", force: true do |t|
     t.integer "party_id"
@@ -54,6 +54,9 @@ ActiveRecord::Schema.define(version: 20140602093953) do
     t.boolean  "recruiting"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "score"
+    t.datetime "ended_at"
+    t.integer  "category"
   end
 
   create_table "tags", force: true do |t|
@@ -69,6 +72,7 @@ ActiveRecord::Schema.define(version: 20140602093953) do
     t.date     "last_login"
     t.string   "password_digest"
     t.string   "remember_token"
+    t.integer  "score"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

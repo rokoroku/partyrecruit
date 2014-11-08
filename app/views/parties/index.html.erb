@@ -1,5 +1,7 @@
 <style type="text/css">
-    body {overflow:hidden;}
+    body {
+        overflow: hidden;
+    }
 </style>
 
 <script type="text/javascript">
@@ -40,6 +42,23 @@
         }
     }
 
+    function collapseAllInfowindows() {
+        for (var i in parties) {
+            var party = parties[i];
+            var marker = markers[party.id];
+            marker.infowindow.close();
+        }
+    }
+
+    function expandAllInfowindows() {
+        for (var i in parties) {
+            var party = parties[i];
+            var marker = markers[party.id];
+            marker.infowindow.open(map, marker);
+        }
+    }
+
+    var beforeZoom = 14;
     function initialize() {
 
         var mapCenter = new google.maps.LatLng(parseFloat(37.28374147476122), parseFloat(127.04418));
@@ -60,22 +79,27 @@
             for (var i in parties) {
 
                 var party = parties[i];
+                var remaining = (new Date(party.ended_at) - new Date()) / 60 / 1000;
+                var remain_string = "";
+                if (remaining > 60) remain_string = (remaining / 60 - 0.5).toFixed(0) + '시간';
+                if (remaining % 60 > 0) remain_string = remain_string + ' ' + (remaining % 60).toFixed(0) + '분';
+
                 var position = new google.maps.LatLng(parseFloat(party.location_latitude), parseFloat(party.location_longitude));
                 var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + Object.keys(party.participants).length + '/' + party.user_limit + ')</small></span></div>';
                 var content = '<div id="party_' + party.id + '_content" style="display:none;" onclick="bringWindowToTop(' + party.id + ')">'
                         + '<p>' + '<img src="https://secure.gravatar.com/avatar/' + party.leader.hash + '?s=28&d=mm" style="margin-right:10px">'
                         + '<strong>' + party.leader.name + '</strong><span class="pull-right">see more</span></p>'
-                        + '<p>' + party.description + '</p>'
+                        + '<p>' + party.description + '<span class="pull-right">' + remain_string + '</span></p>'
                         + '<div style="display:block; height: 32px">';
 
-                if (party.participants[<%= current_user.id %>] != null ) {
+                if (party.participants[<%= current_user.id %>] != null) {
                     content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">이미 가입한 파티입니다.</span>';
                 } else {
 
-                    if ( Object.keys(party.participants).length < party.user_limit) {
+                    if (Object.keys(party.participants).length < party.user_limit) {
                         content += '<a href="parties/' + party.id + '/join#" role="button" class="btn btn-success" style="margin-right:10px">가입</a>';
                     } else {
-                        content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">허용인원을 가득찼습니다.</span>';
+                        content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">허용인원을 초과하였습니다.</span>';
                     }
                 }
 
@@ -85,6 +109,15 @@
 
                 markers[party.id] = createMarker(position, title, content, true, false, true, 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=' + party.id + '|FF0000|000000', false);
             }
+
+
+            google.maps.event.addListener(map, 'zoom_changed', function () {
+                var zoomLevel = map.getZoom();
+                if (beforeZoom > zoomLevel && zoomLevel <= 14) collapseAllInfowindows();
+                else if (beforeZoom < zoomLevel && zoomLevel > 14) expandAllInfowindows();
+                beforeZoom = zoomLevel;
+            });
+
         });
     }
 </script>
@@ -92,11 +125,44 @@
 <!--google map api-->
 <%= render 'mapjs' %>
 
-<!--google map canvas-->
-<div class="container-fluid" id="map-canvas" style="height: 100vh">
+<div class="container-fluid" style="height: 100vh; ">
+  <div class="row">
+    <div class="col-md-3" style="margin-top:20px;">
+      <!--검색 폼-->
+      <form action="<%= search_parties_path %>" method="post">
+        <div style="display: none;">
+          <input name="utf8" type="hidden" value="✓">
+          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+        </div>
+        <div>
+          <p>
+            <input name="keyword" type="text" class="form-control" placeholder="검색어를 입력하세요." style="display: flex">
+          </p>
+        </div>
+        <div class="mybox">
+          <h3>카테고리</h3>
+          <hr>
+          <p>
+            <% category_list.each do |category| %>
+                <span style="width:24%; display: inline-block;"><input type="checkbox" name="category" checked="checked" ><%= category %></span>
+            <% end %>
+          </p>
 
+        </div>
+      </form>
+      <!--검색 폼 끝-->
+
+      <!--파티 목록-->
+      <%= render 'party_listing_block' %>
+      <!--파티 목록 끝-->
+    </div>
+
+    <div class="col-md-9" style="padding:0px;">
+      <!--google map canvas-->
+      <div id="map-canvas" style="height: 100vh"></div>
+    </div>
+  </div>
 </div>
-
 
 <% provide(:title, 'Listing parties') %>
 <div class="container">

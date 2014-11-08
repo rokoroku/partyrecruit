@@ -2,6 +2,7 @@
   <h3>
     <p><%= @party.name %></p>
     <small><%= @party.description %></small>
+    <p><small><%= category_list[@party.category] unless @party.category.nil? %></small></p>
   </h3>
   <br>
   <style type="text/css">
@@ -9,6 +10,7 @@
           width: 100px !important;
           float: left;
       }
+
       dd {
           margin-left: 100px !important;
           padding-top: 1px;
@@ -26,6 +28,12 @@
 
     <dt>게시글 수</dt>
     <dd><%= pluralize(@party.message_count, "post") %></dd>
+
+    <% if @party.recruiting? %>
+        <dt>남은 시간</dt>
+        <dd><%= print_remaining_time(@party.ended_at) %></dd>
+    <% end %>
+
   </dl>
 
   <p></p>

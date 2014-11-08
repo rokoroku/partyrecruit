@@ -7,7 +7,16 @@ class PartiesController < ApplicationController
   def index
     @parties = Party.all
     @active_parties = Party.where recruiting: true
+    # @searched_parties = sort_by_distance(0, 0)
     # @parties = Party.all
+  end
+
+  def sort_by_distance(longitude, latitude)
+    sorted_list = []
+    @active_parties.each do |p|
+      sorted_list << p
+    end
+    sorted_list.sort_by! { |p| p.distance(latitude, longitude) }
   end
 
   def new
@@ -17,6 +26,7 @@ class PartiesController < ApplicationController
   def create
     param = party_params
     param[:recruiting] = true
+    param[:ended_at] = Time.now + 60*60*2 #2시간
 
     @party = Party.new(param)
     if @party.save
@@ -67,7 +77,13 @@ class PartiesController < ApplicationController
   end
 
   def update
-    if @party.update(party_params)
+    param = party_params
+
+    if param[:ended_at].nil?
+      param[:ended_at]= Time.now + 60*60*2 #2시간
+    end
+
+    if @party.update(param)
       flash[:success] = "파티 정보가 수정되었습니다."
       redirect_to @party
     else
@@ -95,6 +111,28 @@ class PartiesController < ApplicationController
     end
   end
 
+
+  def search
+    @keyword = params[:keyword]
+
+    if @keyword.nil?
+      redirect_to parties_url
+    end
+
+    result = []
+    @keyword.chomp.split(/,\s*/).each do |item|
+      result = Party.where(["(name  like ? or description  like ? ) and recruiting = true", "%#{item}%", "%#{item}%"])
+    end
+
+    @parties = Party.all
+    @active_parties = result;
+    render 'index'
+    # respond_to do |format|
+    #   format.html { redirect_to parties_url, notice: 'result.' << result.as_json.to_s }
+    #   format.json { result }
+    # end
+  end
+
   private
   def set_party
     @party = Party.find(params[:id])
@@ -108,6 +146,6 @@ class PartiesController < ApplicationController
   end
 
   def party_params
-    params.require(:party).permit(:name, :user_limit, :description, :location_longitude, :location_latitude, :recruiting)
+    params.require(:party).permit(:name, :user_limit, :category, :description, :location_longitude, :location_latitude, :recruiting, :ended_at)
   end
 end

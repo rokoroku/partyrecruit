@@ -2,7 +2,6 @@
     <% if @party.errors.any? %>
         <div id="error_explanation">
           <h3><%= pluralize(@party.errors.count, "error") %> prohibited this user from being saved:</h3>
-
           <ul>
             <% @party.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
@@ -21,6 +20,12 @@
       <p>
         <%= f.label :name %>
         <%= f.text_field :name, placeholder: "파티명을 입력하세요.", value: @party.name, class: "form-control" %>
+      </p>
+
+      <p>
+        <%= f.label :category %>
+        <%= f.select :category, category_list, selected: 1, class: "form-control" if !@party.category %>
+        <%= f.select :category, category_list, selected: @party.category, class: "form-control" if @party.category %>
       </p>
 
       <p>
