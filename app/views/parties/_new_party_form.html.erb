@@ -10,6 +10,12 @@
         </div>
     <% end %>
 
+    <% category_items = [] %>
+    <% i = 0 %>
+    <% category_list.each do |item| %>
+        <% category_items << [item, i] %>
+        <% i += 1 %>
+    <% end %>
     <div class="form-group" id="new_party_form" style="margin-bottom: 3px">
 
       <p class="help-block">
@@ -24,8 +30,8 @@
 
       <p>
         <%= f.label :category %>
-        <%= f.select :category, category_list, selected: 1, class: "form-control" if !@party.category %>
-        <%= f.select :category, category_list, selected: @party.category, class: "form-control" if @party.category %>
+        <%= f.select :category, category_items, selected: 0, class: "form-control" if !@party.category %>
+        <%= f.select :category, category_items, selected: @party.category, class: "form-control" if @party.category %>
       </p>
 
       <p>

@@ -7,6 +7,7 @@ class PartiesController < ApplicationController
   def index
     @parties = Party.all
     @active_parties = Party.where recruiting: true
+    @categories = [1, 1, 1, 1, 1, 1, 1, 1]
     # @searched_parties = sort_by_distance(0, 0)
     # @parties = Party.all
   end
@@ -78,13 +79,13 @@ class PartiesController < ApplicationController
 
   def update
     param = party_params
-
+    param[:category] = category_list
     if param[:ended_at].nil?
       param[:ended_at]= Time.now + 60*60*24 #2시간
     end
 
     if @party.update(param)
-      flash[:success] = "파티 정보가 수정되었습니다."
+      flash[:success] = "파티 정보가 수정되었습니다. "
       redirect_to @party
     else
       flash[:danger] = "오류가 발생했습니다."
@@ -114,13 +115,30 @@ class PartiesController < ApplicationController
 
   def search
     @keyword = params[:keyword]
+    category = params[:category]
 
-    if @keyword.to_s.empty?
+    @categories = []
+    if category.length == 8
+      category_condition = ""
+    else
+      category_condition = " and ("
+      category.each_key do |value|
+        @categories[Integer(value)] = true
+        category_condition << " category = " << value << " or "
+      end
+      category_condition << "category=8 )"
+    end
+
+    if @keyword.to_s.empty? && category.length == 8
       redirect_to parties_url
     else
       result = []
-      @keyword.chomp.split(/,\s*/).each do |item|
-        result = Party.where(["(name  like ? or description  like ? ) and recruiting = true", "%#{item}%", "%#{item}%"])
+      if @keyword.to_s.empty?
+        result = Party.where(["recruiting = true" + category_condition])
+      else
+        @keyword.chomp.split(/,\s*/).each do |item|
+          result = Party.where(["(name like ? or description like ? ) " + category_condition + " and recruiting = true", "%#{item}%", "%#{item}%"])
+        end
       end
 
       @parties = Party.all

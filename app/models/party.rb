@@ -63,7 +63,7 @@ class Party < ActiveRecord::Base
   end
 
   def leave!(user)
-    participate_ins.find_by(user_id: user.id).destroy
+    participate_ins.find_by(user_id: user.id).destroy if participate?(user)
   end
 
   def message_count

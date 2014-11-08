@@ -129,27 +129,7 @@
   <div class="row">
     <div class="col-md-3" style="margin-top:20px;">
       <!--검색 폼-->
-      <form action="<%= search_parties_path %>" method="post">
-        <div style="display: none;">
-          <input name="utf8" type="hidden" value="✓">
-          <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
-        </div>
-        <div>
-          <p>
-            <input name="keyword" type="text" class="form-control" placeholder="검색어를 입력하세요." style="display: flex">
-          </p>
-        </div>
-        <div class="mybox">
-          <h3>카테고리</h3>
-          <hr>
-          <p>
-            <% category_list.each do |category| %>
-                <span style="width:24%; display: inline-block;"><input type="checkbox" name="category" checked="checked" ><%= category %></span>
-            <% end %>
-          </p>
-
-        </div>
-      </form>
+      <%= render 'party_searching_block' %>
       <!--검색 폼 끝-->
 
       <!--파티 목록-->

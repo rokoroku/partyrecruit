@@ -74,9 +74,24 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user.destroy
+
+    @user.parties.each do |party|
+      was_leader = party.leader.id.equal?(@user.id)
+      if party.leave!(@user)
+        if (party.users.length == 0)
+          party.destroy!
+        else
+          party.leader!(party.users.first) if was_leader
+          Micropost.new({party_id: party.id, content: @user.id.to_s + " leaved"}).save!
+        end
+        @user.destroy
+      else
+        flash[:danger] = "탈퇴에 실패하였습니다. 잠시 후 다시 시도하세요."
+      end
+    end
+
     respond_to do |format|
-      format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
+      format.html { redirect_to root_path }
       format.json { head :no_content }
     end
   end

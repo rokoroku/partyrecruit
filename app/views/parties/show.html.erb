@@ -28,7 +28,7 @@
 
             <div class="form-group" id="new_micropost_form">
               <%= f.text_field :party_id, value: @party.id, class: "hidden", style: "display: none;" %>
-              <%= f.text_area :content, placeholder: "What's going on?", rows: '4', class: "form-control", style: "resize: none; overflow:hidden;" %>
+              <%= f.text_area :content, placeholder: "What's going on?", rows: '4', class: "form-control", style: "resize: none; overflow:hidden;", id: "textarea" %>
               <%= f.submit "Submit", class: "btn btn-primary pull-right", style: "position:relative; top: -40px; right: 5px" %>
             </div>
 
