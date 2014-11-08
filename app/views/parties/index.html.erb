@@ -82,7 +82,7 @@
                 var remaining = (new Date(party.ended_at) - new Date()) / 60 / 1000;
                 var remain_string = "";
                 if (remaining > 60) remain_string = (remaining / 60 - 0.5).toFixed(0) + '시간';
-                if (remaining % 60 > 0) remain_string = remain_string + ' ' + (remaining % 60).toFixed(0) + '분';
+                if (remaining % 60 > 0) remain_string = remain_string + ' ' + (remaining % 60 - 0.5).toFixed(0) + '분';
 
                 var position = new google.maps.LatLng(parseFloat(party.location_latitude), parseFloat(party.location_longitude));
                 var title = '<div class="partytitle" onclick="togglePartyDescription(' + party.id + ')">' + party.name + ' <span class="pull-right"><small>(' + Object.keys(party.participants).length + '/' + party.user_limit + ')</small></span></div>';

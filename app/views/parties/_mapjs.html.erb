@@ -26,7 +26,7 @@
 
     function setCenter(latitude, longitude) {
         var newCenter = new google.maps.LatLng(latitude, longitude);
-        if(map.getZoom() <= 14) map.setZoom(15);
+        if (map.getZoom() <= 14) map.setZoom(15);
         map.panTo(newCenter);
     }
 
@@ -83,7 +83,7 @@
         var formContent = contentString.find('input');
 
         //set dom ready listener of infowindow
-        if(title === 'New Party') {
+        if (title === 'New Party' || title === 'Edit Party') {
             contentString[0].setAttribute("style", "width:auto; min-width: 320px; padding:10px 0 3px 10px");
             google.maps.event.addListener(infowindow, 'domready', function () {
                 var commit_btn = formContent[formContent.length - 1];
@@ -118,6 +118,7 @@
         google.maps.event.addListener(marker, 'dragend', function () {
             map.setCenter(marker.getPosition());
             map.panBy(0, -150);
+            setLatLng(marker)
         });
 
         return marker;
@@ -126,11 +127,18 @@
 
 
     function setLatLng(marker) {
-        var party_form = document.forms['new_party'];
-        if (party_form) {
-            party_form.elements['party_location_latitude'].value = marker.getPosition().lat();
-            party_form.elements['party_location_longitude'].value = marker.getPosition().lng();
-        }
+//        var party_form = document.forms['new_party'];
+//        if(!party_form) party_form = document.forms['edit_party'];
+
+//        if (party_form) {
+//            party_form.elements['party_location_latitude'].value = marker.getPosition().lat();
+//            party_form.elements['party_location_longitude'].value = marker.getPosition().lng();
+//        }
+        var latform = document.getElementById('party_location_latitude');
+        var lngform = document.getElementById('party_location_longitude');
+
+        if (latform) latform.value = marker.getPosition().lat();
+        if (lngform) lngform.value = marker.getPosition().lng();
     }
 
     //############### Remove Marker Function ##############

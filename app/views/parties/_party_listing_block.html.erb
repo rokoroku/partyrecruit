@@ -12,11 +12,12 @@
 
   <% if @active_parties.length > 0 %>
       <% @active_parties.each do |party| %>
-          <!--<li><%= link_to party.name, party %></li>-->
           <hr>
           <p>
-            <a href="#" onclick="setCenter(<%=party.location_latitude%>, <%=party.location_longitude%>); return false;"><%= party.name %></a>
-            <span class="pull-right">(<%= party.users.count %>/<%= party.user_limit %>)</span>
+            <%= link_to party.name, party %>
+            <!--<a href="#" onclick="setCenter(<%=party.location_latitude%>, <%=party.location_longitude%>); return false;"><%= party.name %></a>-->
+            (<%= party.users.count %>/<%= party.user_limit %>)
+            <span class="pull-right"><img src="https://secure.gravatar.com/avatar/' + party.leader.hash + '?s=20&d=mm" style="margin-right:4px"><%=party.leader.name%></span>
           </p>
 
           <p>

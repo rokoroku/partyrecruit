@@ -24,9 +24,6 @@ class Party < ActiveRecord::Base
       if ended_at < Time.now
         update_attributes(recruiting: false)
       end
-    else
-      ended_at = Time.now
-      update_attributes(ended_at: ended_at )
     end
   end
 

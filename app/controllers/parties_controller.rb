@@ -26,7 +26,7 @@ class PartiesController < ApplicationController
   def create
     param = party_params
     param[:recruiting] = true
-    param[:ended_at] = Time.now + 60*60*2 #2시간
+    param[:ended_at] = Time.now + 60*60*24 #2시간
 
     @party = Party.new(param)
     if @party.save
@@ -80,7 +80,7 @@ class PartiesController < ApplicationController
     param = party_params
 
     if param[:ended_at].nil?
-      param[:ended_at]= Time.now + 60*60*2 #2시간
+      param[:ended_at]= Time.now + 60*60*24 #2시간
     end
 
     if @party.update(param)
@@ -115,18 +115,18 @@ class PartiesController < ApplicationController
   def search
     @keyword = params[:keyword]
 
-    if @keyword.nil?
+    if @keyword.to_s.empty?
       redirect_to parties_url
-    end
+    else
+      result = []
+      @keyword.chomp.split(/,\s*/).each do |item|
+        result = Party.where(["(name  like ? or description  like ? ) and recruiting = true", "%#{item}%", "%#{item}%"])
+      end
 
-    result = []
-    @keyword.chomp.split(/,\s*/).each do |item|
-      result = Party.where(["(name  like ? or description  like ? ) and recruiting = true", "%#{item}%", "%#{item}%"])
+      @parties = Party.all
+      @active_parties = result;
+      render 'index'
     end
-
-    @parties = Party.all
-    @active_parties = result;
-    render 'index'
     # respond_to do |format|
     #   format.html { redirect_to parties_url, notice: 'result.' << result.as_json.to_s }
     #   format.json { result }
