@@ -19,7 +19,7 @@
 
     function bringWindowToTop(id) {
         var marker = markers[id];
-        marker.infowindow.setZIndex(1000);
+        marker.infowindow.setZIndex(zIndex++);
         var div = $("#party_" + id + "_content").trigger("create");
 //        marker.infowindow.open(map, marker);
     }
@@ -36,8 +36,8 @@
             marker.infowindow.open(map, marker);
         } else {
             div.show();
-            marker.setZIndex(1000);
-            marker.infowindow.setZIndex(1000);
+            marker.setZIndex(zIndex++);
+            marker.infowindow.setZIndex(zIndex++);
             marker.infowindow.open(map, marker);
         }
     }
@@ -58,6 +58,26 @@
             if(map.getBounds().contains(marker.getPosition())) {
                 marker.infowindow.open(map, marker);
 //                map.panTo(beforeCenter);
+            }
+        }
+    }
+
+    var zIndex = 1;
+    function setFocus(id) {
+        var marker = markers[id];
+        if(marker) {
+            if (marker.infowindow) {
+                marker.infowindow.open(map, marker);
+                var div = $("#party_" + id + "_content");
+
+                if (div) {
+                    div.show();
+                    marker.setZIndex(zIndex);
+                    marker.infowindow.setZIndex(zIndex);
+//                    marker.infowindow.open(map, marker);
+                    map.panTo(marker.getPosition());
+                    zIndex++;
+                }
             }
         }
     }
@@ -98,7 +118,7 @@
                         + '<div style="display:block; height: 32px">';
 
                 if (party.participants[<%= current_user.id %>] != null) {
-                    content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray">이미 가입한 파티입니다.</span>';
+                    content += '<span style="display:inline-block; position:absolute; bottom:6px; color:darkgray"><a href="parties/' + party.id + '">들어가기</a></span>';
                 } else {
 
                     if (Object.keys(party.participants).length < party.user_limit) {
