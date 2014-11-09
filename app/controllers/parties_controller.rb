@@ -79,9 +79,8 @@ class PartiesController < ApplicationController
 
   def update
     param = party_params
-    param[:category] = category_list
     if param[:ended_at].nil?
-      param[:ended_at]= Time.now + 60*60*24 #2시간
+      param[:ended_at]= Time.now + 60*60*24 #24시간
     end
 
     if @party.update(param)
