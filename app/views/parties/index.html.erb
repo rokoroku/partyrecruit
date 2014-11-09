@@ -51,14 +51,19 @@
     }
 
     function expandAllInfowindows() {
+//        var beforeCenter = map.getCenter();
         for (var i in parties) {
             var party = parties[i];
             var marker = markers[party.id];
-            marker.infowindow.open(map, marker);
+            if(map.getBounds().contains(marker.getPosition())) {
+                marker.infowindow.open(map, marker);
+//                map.panTo(beforeCenter);
+            }
         }
     }
 
     var beforeZoom = 14;
+    var beforeCenter;
     function initialize() {
 
         var mapCenter = new google.maps.LatLng(parseFloat(37.28374147476122), parseFloat(127.04418));

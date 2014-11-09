@@ -17,7 +17,7 @@
             <%= link_to party.name, party %>
             <!--<a href="#" onclick="setCenter(<%=party.location_latitude%>, <%=party.location_longitude%>); return false;"><%= party.name %></a>-->
             (<%= party.users.count %>/<%= party.user_limit %>)
-            <span class="pull-right"><img src="https://secure.gravatar.com/avatar/<%= party.leader.hash %>?s=20&d=mm" style="margin-right:4px"><%=party.leader.name%></span>
+            <span class="pull-right"><img src="https://secure.gravatar.com/avatar/<%= Digest::MD5::hexdigest(party.leader.email.downcase) %>?s=20&d=mm" style="margin-right:4px"><%=party.leader.name%></span>
           </p>
 
           <p>
